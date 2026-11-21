@@ -37,15 +37,31 @@ class Player(Character):
         if self.lives > 0:
             self.lives -= 1
 
-    # def same_position(self, ghost):
-    #     return self.x == ghost.x and self.y == ghost.y
+    def same_position(self, ghost):
+        return self.x == ghost.x and self.y == ghost.y
     
+    def reset_position(self):
+        if self.maze.height < 14 or self.maze.width < 14:
+            self.x = self.maze.width // 2
+            self.y = self.maze.height // 2
+        else:
+            if self.maze.width % 2 != 0:
+                self.x = self.maze.width // 2
+                self.y = self.maze.height // 2
+            else:
+                self.x = (self.maze.width - 1) // 2
+                self.y = (self.maze.height - 1) // 2
 
 
 class Ghost(Character):
     def __init__(self, x, y, maze):
-       super().__init__(x, y, maze)
+        super().__init__(x, y, maze)
+        self.start_x = x
+        self.start_y = y
 
+    def reset_position(self):
+        self.x = self.start_x
+        self.y = self.start_y
 
 
 
