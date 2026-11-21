@@ -35,8 +35,9 @@ def main():
     pacman.lose_life()
     pacman.lose_life()
     print(pacman.lives)
+    pacman.reset_position()
 
-    # print(pacman.same_position(ghost1))
+    print(pacman.same_position(ghost1))
 
     print(pacman.position())
 
