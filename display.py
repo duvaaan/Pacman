@@ -17,8 +17,8 @@ WALL_SIZE = 5
 CHARACTER_SIZE = 50
 
 
-def display_maze(maze, player, ghosts):
-    """Display the maze, Pacman, ghosts and dots using Pygame."""
+def display_maze(maze, player, ghosts, pacgums, super_pacgums):
+    """Display the maze, Pacman, ghosts and Pac-Gums using Pygame."""
     pygame.init()
 
     rows = len(maze)
@@ -63,13 +63,23 @@ def display_maze(maze, player, ghosts):
         pygame.transform.scale(ghost4_image, (CHARACTER_SIZE, CHARACTER_SIZE))
     ]
 
-    # Load dot image
+    # Load normal Pac-Gum image
     dot_image = pygame.image.load(
         "assets/other/dot.png"
     ).convert_alpha()
 
     dot_image = pygame.transform.scale(
         dot_image,
+        (40, 40)
+    )
+
+ # Load Super Pac-Gum image
+    super_dot_image = pygame.image.load(
+        "assets/other/strawberry.png"
+    ).convert_alpha()
+
+    super_dot_image = pygame.transform.scale(
+        super_dot_image,
         (40, 40)
     )
 
@@ -92,7 +102,7 @@ def display_maze(maze, player, ghosts):
                 right = left + CELL_SIZE
                 bottom = top + CELL_SIZE
 
-                # Draw 42 pattern cells in yellow
+                # Draw 42 pattern cells
                 if cell == 15:
                     pygame.draw.rect(
                         screen,
@@ -100,7 +110,7 @@ def display_maze(maze, player, ghosts):
                         (left, top, CELL_SIZE, CELL_SIZE)
                     )
 
-                # Draw walls in blue
+                # Draw walls
                 if cell & NORTH:
                     pygame.draw.line(
                         screen, CYAN,
@@ -125,18 +135,19 @@ def display_maze(maze, player, ghosts):
                         (left, top), (left, bottom), WALL_SIZE
                     )
 
-                # Draw dots, excluding 42 cells and four corners
-                if cell != 15 and (x, y) not in [
-                    (0, 0),
-                    (cols - 1, 0),
-                    (0, rows - 1),
-                    (cols - 1, rows - 1),
-                    (player.x, player.y)
-                ]:
-                    dot_x = left + (CELL_SIZE - dot_image.get_width()) // 2
-                    dot_y = top + (CELL_SIZE - dot_image.get_height()) // 2
+        # Draw normal Pac-Gums
+        for x, y in pacgums:
+            dot_x = x * CELL_SIZE + (CELL_SIZE - dot_image.get_width()) // 2
+            dot_y = y * CELL_SIZE + (CELL_SIZE - dot_image.get_height()) // 2
 
-                    screen.blit(dot_image, (dot_x, dot_y))
+            screen.blit(dot_image, (dot_x, dot_y))
+
+        # Draw Super Pac-Gums
+        for x, y in super_pacgums:
+            dot_x = x * CELL_SIZE + (CELL_SIZE - super_dot_image.get_width()) // 2
+            dot_y = y * CELL_SIZE + (CELL_SIZE - super_dot_image.get_height()) // 2
+
+            screen.blit(super_dot_image, (dot_x, dot_y))
 
         # Draw Pacman
         pacman_x = player.x * CELL_SIZE
@@ -156,8 +167,6 @@ def display_maze(maze, player, ghosts):
             image_y = ghost_y + (CELL_SIZE - CHARACTER_SIZE) // 2
 
             screen.blit(ghost_image, (image_x, image_y))
-
-        # PATH IMAGE: ADD YOUR CODE HERE
 
         pygame.display.flip()
         clock.tick(30)

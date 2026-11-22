@@ -2,6 +2,7 @@ from display import display_maze
 from parsing import config_parser
 from maze import Maze, NORTH, SOUTH, EAST, WEST
 from characters import Player, Ghost
+import random
 
 
 def main():
@@ -14,11 +15,46 @@ def main():
     print(maze.can_move(0,0,WEST))
 
     pacman = Player(0,0, maze, config["lives"])
+    pacman.reset_position()
 
     ghost1 = Ghost(0,0, maze)
     ghost2 = Ghost(maze.width - 1, 0, maze)
     ghost3 = Ghost(0,maze.height - 1, maze)
     ghost4 = Ghost(maze.width - 1,maze.height - 1, maze)
+
+
+
+    def generate_pacgum(maze, pacgums, pacman):
+        available_cells = []
+        corners = [(0, 0),(maze.width - 1, 0),(0,maze.height - 1),(maze.width - 1, maze.height - 1)]
+
+        for y, row in enumerate(maze.grid):
+            for x, cell in enumerate(row):
+                if cell == 15:
+                    continue
+                if (x,y) in corners:
+                    continue
+                if (x,y) == pacman.position():
+                    continue
+                    
+                available_cells.append((x,y))
+
+        if pacgums > len(available_cells):
+            number_to_place = len(available_cells)
+        else:
+            number_to_place = pacgums
+
+        return random.sample(available_cells, number_to_place)
+
+
+
+
+
+
+
+
+    pacgums = generate_pacgum(maze, config["pacgum"], pacman)
+    super_pacgums = [(0, 0),(maze.width - 1, 0),(0,maze.height - 1),(maze.width - 1, maze.height - 1)]
 
     #pacman.move(EAST)
 
@@ -35,7 +71,6 @@ def main():
     pacman.lose_life()
     pacman.lose_life()
     print(pacman.lives)
-    pacman.reset_position()
 
     print(pacman.same_position(ghost1))
 
@@ -43,6 +78,6 @@ def main():
 
     ghosts = [ghost1, ghost2, ghost3, ghost4]
 
-    display_maze(maze.grid, pacman, ghosts)
+    display_maze(maze.grid, pacman, ghosts, pacgums, super_pacgums)
 
 main()
