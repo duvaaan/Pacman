@@ -24,11 +24,14 @@ class Character:
 
 
 class Player(Character):
-    def __init__(self, x, y, maze, lives):
+    def __init__(self, x, y, maze, lives, pacgums, super_pacgums):
         super().__init__(x, y, maze)
 
         self.score = 0
         self.lives = lives
+        self.pacgums = pacgums
+        self.super_pacgums = super_pacgums
+        self.power_mode = False
 
     def add_score(self, points):
         self.score += points
@@ -51,6 +54,17 @@ class Player(Character):
             else:
                 self.x = (self.maze.width - 1) // 2
                 self.y = (self.maze.height - 1) // 2
+
+    def pacgums_collection(self, pacgums_points, super_pacgums_points):
+        
+        if self.position() in self.pacgums:
+            self.pacgums.remove(self.position())
+            self.add_score(pacgums_points)
+        elif self.position() in self.super_pacgums:
+            self.super_pacgums.remove(self.position())
+            self.add_score(super_pacgums_points)
+            self.power_mode = True
+
 
 
 class Ghost(Character):
