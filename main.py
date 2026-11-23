@@ -12,18 +12,6 @@ def main():
     maze = Maze(config)
     print(maze.grid)
 
-    print(maze.can_move(0,0,WEST))
-
-    pacman = Player(0,0, maze, config["lives"])
-    pacman.reset_position()
-
-    ghost1 = Ghost(0,0, maze)
-    ghost2 = Ghost(maze.width - 1, 0, maze)
-    ghost3 = Ghost(0,maze.height - 1, maze)
-    ghost4 = Ghost(maze.width - 1,maze.height - 1, maze)
-
-
-
     def generate_pacgum(maze, pacgums, pacman):
         available_cells = []
         corners = [(0, 0),(maze.width - 1, 0),(0,maze.height - 1),(maze.width - 1, maze.height - 1)]
@@ -46,15 +34,25 @@ def main():
 
         return random.sample(available_cells, number_to_place)
 
-
-
-
-
-
-
+    pacman = Player(0, 0, maze, config["lives"], [], [])
+    pacman.reset_position()
 
     pacgums = generate_pacgum(maze, config["pacgum"], pacman)
-    super_pacgums = [(0, 0),(maze.width - 1, 0),(0,maze.height - 1),(maze.width - 1, maze.height - 1)]
+
+    super_pacgums = [
+        (0, 0),
+        (maze.width - 1, 0),
+        (0, maze.height - 1),
+        (maze.width - 1, maze.height - 1)
+    ]
+
+    pacman.pacgums = pacgums
+    pacman.super_pacgums = super_pacgums
+
+    ghost1 = Ghost(0,0, maze)
+    ghost2 = Ghost(maze.width - 1, 0, maze)
+    ghost3 = Ghost(0,maze.height - 1, maze)
+    ghost4 = Ghost(maze.width - 1,maze.height - 1, maze)
 
     #pacman.move(EAST)
 
@@ -78,6 +76,6 @@ def main():
 
     ghosts = [ghost1, ghost2, ghost3, ghost4]
 
-    display_maze(maze.grid, pacman, ghosts, pacgums, super_pacgums)
+    #display_maze(maze.grid, pacman, ghosts, pacgums, super_pacgums)
 
 main()
