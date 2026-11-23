@@ -65,6 +65,14 @@ class Player(Character):
             self.add_score(super_pacgums_points)
             self.power_mode = True
 
+    def update_power_mode(self):
+
+        if self.power_mode:
+            count_time = time.time() - self.power_mode_start
+        if count_time >= 10:
+            self.power_mode = False
+            self.power_mode_start = None
+
 
 
 class Ghost(Character):
